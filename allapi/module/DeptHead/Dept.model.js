@@ -30,7 +30,7 @@ const Alldepthead = {
       });
   
       const result = await con.execute(
-        "SELECT DISTINCT PERSONALID, USERNAME, EMP_CODE,NAME,DEP_NAME FROM HRD.DEPARMENT_ACCESS WHERE PERSONALID = :catId",
+        "SELECT DISTINCT PERSONALID, USERNAME, EMP_CODE,NAME,DEP_NAME FROM HRD.DEPARMENT_ACCESS WHERE DEPART_HEAD='Y' AND PERSONALID = :catId",
         [catId]
       );
   

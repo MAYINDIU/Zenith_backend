@@ -25,7 +25,7 @@ exports.getAllDepartmentHead = (req, res) => {
 //id wise department head details
 exports.getDepartmentyById = (req, res) => {
   const catId = req.params.id;
-  console.log(catId);
+  // console.log(catId);
 
   Alldepthead.getById(catId, (err, dept_head) => {
     if (err) {
@@ -33,7 +33,7 @@ exports.getDepartmentyById = (req, res) => {
     }
 
     if (!dept_head) {
-      return res.status(404).json({ error: "Department not found" });
+      return res.status(404).json({ error: "Department Head Data not found" });
     }
 
     const formattedDeptHead = {

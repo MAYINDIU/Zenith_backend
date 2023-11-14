@@ -9,7 +9,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // routes
 const DepartmentRoute = require("./allapi/module/DeptHead/Dept.route");
-
+const LoginRoute = require("./allapi/module/Login/Login.route");
+const ModuleRoute = require("./allapi/module/ModuleList/ModuleList.route");
 // Home page
 app.get("/", (req, res) => {
   res.send(`Wow..!!! Route is Running`);
@@ -18,5 +19,6 @@ app.get("/", (req, res) => {
 
 
 app.use("/api", DepartmentRoute);
-
+app.use("/api", LoginRoute);
+app.use("/api", ModuleRoute);
 module.exports = app;
