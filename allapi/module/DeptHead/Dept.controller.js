@@ -1,8 +1,11 @@
 const Alldepthead = require("./Dept.model");
 
+
+
+
 //all department head list
-exports.getAllDepartmentHead = (req, res) => {
-  Alldepthead.getAll((err, dept_head) => {
+exports.getAllHead = (req, res) => {
+  Alldepthead.getDeptHeadlist((err, dept_head) => {
     if (err) {
       return res.status(500).json({ error: "Failed to get dept_head list" });
     }
@@ -19,6 +22,9 @@ exports.getAllDepartmentHead = (req, res) => {
     res.json({ dept_head: formattedDeptHead });
   });
 };
+
+
+
 
  
 
