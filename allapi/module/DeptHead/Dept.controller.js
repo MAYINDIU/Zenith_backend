@@ -1,8 +1,5 @@
 const Alldepthead = require("./Dept.model");
 
-
-
-
 //all department head list
 exports.getAllHead = (req, res) => {
   Alldepthead.getDeptHeadlist((err, dept_head) => {
@@ -22,11 +19,6 @@ exports.getAllHead = (req, res) => {
     res.json({ dept_head: formattedDeptHead });
   });
 };
-
-
-
-
- 
 
 //id wise department head details
 exports.getDepartmentyById = (req, res) => {

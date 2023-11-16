@@ -1,19 +1,27 @@
 const AllModule = require("./ModuleList.model");
 
-exports.createorders_two = (req, res) => {
-  const body = req.body;
 
-  const orders_two = {
+exports.createDATA = (req, res) => {
+  const body = req.body;
+  console.log(body);
+
+  const insertData = {
     ...body,
   };
 
-  AllModule.create(orders_two, (err, orders_twoId) => {
+  AllModule.create(insertData, (err, INSERTId) => {
     if (err) {
-      return res.status(500).json({ error: "Failed to create orders_two" });
+      console.error('Error creating data:', err);
+      return res.status(500).json({ error: 'Failed to create data' });
     }
-    res.status(201).json({ orders_twoId });
+
+    console.log('Data created successfully with ID:', INSERTId);
+    res.status(201).json("Permission Successfully");
   });
 };
+
+
+
 //all modules list
 exports.getAllmodules = (req, res) => {
     AllModule.getAllmodule((err, module) => {
