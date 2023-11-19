@@ -12,7 +12,7 @@ exports.createDATA = (req, res) => {
   AllModule.create(insertData, (err, INSERTId) => {
     if (err) {
       console.error('Error creating data:', err);
-      return res.status(500).json({ error: 'Failed to create data' });
+      return res.status(500).json('Already Permitted');
     }
 
     console.log('Data created successfully with ID:', INSERTId);
@@ -69,5 +69,49 @@ exports.getAllmodules = (req, res) => {
       res.json({ sub_module_list: formattedModuleList });
     });
   };
+
+    //module id wise department list
+    exports.getdeptListByMid = (req, res) => {
+      const moduleId = req.params.id;
+    
+      AllModule.getdeptListByModuleId(moduleId, (err, dept_list) => {
+        if (err) {
+          return res.status(500).json({ error: "Failed to get module data" });
+        }
+    
+        if (!dept_list || dept_list.length === 0) {
+          return res.status(404).json({ error: "Module not found" });
+        }
+    
+        // Assuming each inner array represents a module
+        const formattedModuleList = dept_list.map(moduleArray => {
+          return {
+            department_id: moduleArray[0],
+          };
+        });
+    
+        res.json({ department_list: formattedModuleList });
+      });
+    };
+
+//all dept permission list
+exports.deptPermissionlist = (req, res) => {
+  AllModule.getdeptParmissionlist((err, module) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get permission list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = module.map((head) => ({
+      module_id: head[0],
+      access_user: head[1],
+      status: head[2],
+      created_date: head[3],
+      permitted_by: head[4],
+    }));
+
+    res.json({ dept_permission_list: formattedDeptHead });
+  });
+};
   
   
