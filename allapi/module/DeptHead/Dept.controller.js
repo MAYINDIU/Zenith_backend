@@ -11,9 +11,10 @@ exports.getAllHead = (req, res) => {
     const formattedDeptHead = dept_head.map((head) => ({
       dept_head_id: head[0],
       short_name: head[1],
-      employee_id: head[2],
+      role_id: head[2],
       full_name: head[3],
-      department_name: head[4],
+      department_code: head[4],
+      department_name: head[5],
     }));
 
     res.json({ dept_head: formattedDeptHead });

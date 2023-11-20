@@ -113,5 +113,26 @@ exports.deptPermissionlist = (req, res) => {
     res.json({ dept_permission_list: formattedDeptHead });
   });
 };
+
+//total permitted user 
+exports.totalPermittedUser = (req, res) => {
+  AllModule.getTotaluserlist((err, module) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get total user" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = module.map((head) => ({
+      total_user: head[0],
+
+    }));
+
+    // Assuming there is only one element in the formattedDeptHead array
+    const resultObject = { total_user: formattedDeptHead[0] };
+
+    res.json(resultObject);
+  });
+};
+
   
   

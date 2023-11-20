@@ -9,5 +9,7 @@ router
 .get("/dept-permission-list", ModuleController.deptPermissionlist)
 .get("/module-list/:id", ModuleController.getModuleById)
 .get("/dept-list-mIdwise/:id", ModuleController.getdeptListByMid)
+.get("/total-user", ModuleController.totalPermittedUser)
+
 
 module.exports = router;

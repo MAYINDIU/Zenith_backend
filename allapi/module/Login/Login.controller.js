@@ -17,14 +17,12 @@ exports.getLoginById = (req, res) => {
       }
   
       const formattedDeptHead = {
-        CODE: user_data[0],
+        PERSONALID: user_data[0],
         NAME: user_data[1],
-        PERSONALID: user_data[2],
-        MOBILE: user_data[3],
-        USER_PASSWORD: user_data[4],
-        STATUS: user_data[5],
-        DSGN: user_data[6],
-        INDATE: user_data[7],
+        ROLE_ID: user_data[2],
+        ROLE_NAME: user_data[3],
+        DEPT_CODE: user_data[4],
+        DEPT_NAME: user_data[5],
       };
   
       res.json({ user_details: formattedDeptHead });

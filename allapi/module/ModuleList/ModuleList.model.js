@@ -148,7 +148,29 @@ const AllModule = {
       }
   }
   allpermission();
+},
+
+  //total user list
+  getTotaluserlist: (callback) => {
+    async function total_user(){
+      let con;
+      try{
+          con = await oracledb.getConnection({
+              user            : "MENU",
+              password        : "mayin",
+              connectString   : "192.168.3.11/system"
+          });
+          const data = await con.execute("SELECT COUNT(*) AS TOTAL_USER FROM MENU.MODULE_ACCESS  WHERE ACCESS_STAT='Y'");
+          callback(null, data.rows);
+      }catch(err){
+          console.error(err);
+      }
+  }
+  total_user();
 }
+
+
+
 
 };
   
