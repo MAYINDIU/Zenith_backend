@@ -46,3 +46,23 @@ exports.getDepartmentyById = (req, res) => {
     res.json({ dept_head_details: formattedDeptHead });
   });
 };
+
+//Count total department incharge
+exports.totalDepthead = (req, res) => {
+  Alldepthead.getTotalDeptHead((err, module) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get total department head" });
+    }
+
+    // Map the dept_head total data to the desired format
+    const formattedDeptHead = module.map((head) => ({
+      total_depthead: head[0],
+
+    }));
+
+    // Assuming there is only one element in the formattedDeptHead array
+    const resultObject = { total_depthead: formattedDeptHead[0] };
+
+    res.json(resultObject);
+  });
+};

@@ -63,6 +63,25 @@ const Alldepthead = {
     }
   },
 
+    //count total department head
+    getTotalDeptHead: (callback) => {
+      async function total_dept_head(){
+        let con;
+        try{
+            con = await oracledb.getConnection({
+                user            : "MENU",
+                password        : "mayin",
+                connectString   : "192.168.3.11/system"
+            });
+            const data = await con.execute("SELECT COUNT(*) FROM USER_ROLE_DEPT WHERE ROLE_NAME='DEPT-HEAD'");
+            callback(null, data.rows);
+        }catch(err){
+            console.error(err);
+        }
+    }
+    total_dept_head();
+  },
+
   
 
 };

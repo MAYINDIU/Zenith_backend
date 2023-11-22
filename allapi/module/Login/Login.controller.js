@@ -6,7 +6,7 @@ const Login = require("./Login.model");
 exports.getLoginById = (req, res) => {
     const personalId = req.params.personalId;
     const password = req.params.password;
-    console.log(personalId);
+    // console.log(personalId);
   
     Login.getById(personalId, password, (err, user_data) => {
       if (err) {
@@ -28,4 +28,6 @@ exports.getLoginById = (req, res) => {
       res.json({ user_details: formattedDeptHead });
     });
   };
+
+  
   

@@ -10,6 +10,11 @@ router
 .get("/module-list/:id", ModuleController.getModuleById)
 .get("/dept-list-mIdwise/:id", ModuleController.getdeptListByMid)
 .get("/total-user", ModuleController.totalPermittedUser)
+.get("/total-module", ModuleController.totalModule)
+.get("/dept-head-pmodule-list/:id", ModuleController.getdeptmodulelist)
+.get("/user-list/:id", ModuleController.getuserListBydeptid)
+.get("/previlage-list", ModuleController.previlageList)
+
 
 
 module.exports = router;

@@ -134,5 +134,95 @@ exports.totalPermittedUser = (req, res) => {
   });
 };
 
+//Count total Module for admin 
+exports.totalModule = (req, res) => {
+  AllModule.getTotalModule((err, module) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get total module" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = module.map((head) => ({
+      total_module: head[0],
+
+    }));
+
+    // Assuming there is only one element in the formattedDeptHead array
+    const resultObject = { total_module: formattedDeptHead[0] };
+
+    res.json(resultObject);
+  });
+};
+
+    //permitted depat-head module list personal_id wise
+    exports.getdeptmodulelist = (req, res) => {
+      const personalId = req.params.id;
+    
+      AllModule.getdeptHeadModulelist(personalId, (err, module_list) => {
+        if (err) {
+          return res.status(500).json({ error: "Failed to get module data" });
+        }
+    
+        if (!module_list || module_list.length === 0) {
+          return res.status(404).json({ error: "Module not found" });
+        }
+    
+        // Assuming each inner array represents a module
+        const formattedModuleList = module_list.map(moduleArray => {
+          return {
+            Module_name: moduleArray[0],
+            Module_id: moduleArray[1],
+          };
+        });
+    
+        res.json({ module_list: formattedModuleList });
+      });
+    };
+        //module id wise department list
+        exports.getuserListBydeptid = (req, res) => {
+          const moduleId = req.params.id;
+        
+          AllModule.getuserlistBydeptheadId(moduleId, (err, user_list) => {
+            if (err) {
+              return res.status(500).json({ error: "Failed to get user list data" });
+            }
+        
+            if (!user_list || user_list.length === 0) {
+              return res.status(404).json({ error: "User list not found" });
+            }
+        
+            // Assuming each inner array represents a USER
+            const formattedModuleList = user_list.map(userArray => {
+              return {
+                PERSONAL_ID: userArray[0],
+                NAME: userArray[1],
+                ROLE_ID: userArray[2],
+                ROLE_NAME: userArray[3],
+                DEP_CODE:userArray[4]
+                
+              };
+            });
+        
+            res.json({ user_list: formattedModuleList });
+          });
+        };
+
+  //previlage list
+exports.previlageList = (req, res) => {
+  AllModule.getprevilagelist((err, module) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get previlage list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = module.map((head) => ({
+      prev_id: head[0],
+      prev_name: head[1],
+
+    }));
+
+    res.json({ previlage_list: formattedDeptHead });
+  });
+};
   
   
