@@ -11,6 +11,7 @@ app.use(express.urlencoded({ extended: true }));
 const DepartmentRoute = require("./allapi/module/DeptHead/Dept.route");
 const LoginRoute = require("./allapi/module/Login/Login.route");
 const ModuleRoute = require("./allapi/module/ModuleList/ModuleList.route");
+const DeptpermissionRoute = require("./allapi/module/DeptPermission/DeptPermission.route");
 // Home page
 app.get("/", (req, res) => {
   res.send(`Wow..!!! Route is Running`);
@@ -21,4 +22,5 @@ app.get("/", (req, res) => {
 app.use("/api", DepartmentRoute);
 app.use("/api", LoginRoute);
 app.use("/api", ModuleRoute);
+app.use("/api", DeptpermissionRoute);
 module.exports = app;

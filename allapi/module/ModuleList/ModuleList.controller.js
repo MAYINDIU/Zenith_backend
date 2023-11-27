@@ -1,24 +1,21 @@
 const AllModule = require("./ModuleList.model");
 
 
-exports.createDATA = (req, res) => {
-  const body = req.body;
-  console.log(body);
+exports.createDATA = async (req, res) => {
+  const permissions = req.body;
 
-  const insertData = {
-    ...body,
-  };
-
-  AllModule.create(insertData, (err, INSERTId) => {
-    if (err) {
-      console.error('Error creating data:', err);
-      return res.status(500).json('Already Permitted');
-    }
-
-    console.log('Data created successfully with ID:', INSERTId);
+  try {
+    const results = await AllModule.create(permissions);
     res.status(201).json("Permission Successfully");
-  });
+  } catch (error) {
+    console.error('Error creating permissions:', error);
+    res.status(500).json("Already Permitted");
+  }
+
 };
+
+
+
 
 
 
@@ -104,10 +101,13 @@ exports.deptPermissionlist = (req, res) => {
     // Map the dept_head data to the desired format
     const formattedDeptHead = module.map((head) => ({
       module_id: head[0],
-      access_user: head[1],
-      status: head[2],
-      created_date: head[3],
-      permitted_by: head[4],
+      module_name: head[1],
+      p_read: head[2],
+      p_create: head[3],
+      p_edit: head[4],
+      p_delete: head[5],
+      name: head[6],
+      dep_name: head[7],
     }));
 
     res.json({ dept_permission_list: formattedDeptHead });

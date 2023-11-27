@@ -3,41 +3,79 @@ const connection = require("../../../utils/ConnectOracle");
 const oracledb = require('oracledb');
 oracledb.initOracleClient({libDir: 'C:\\instantclient_21_3'});
 
-const dbConfig = {
-  user            : "MENU",
-  password        : "mayin",
-  connectString   : "192.168.3.11/system"
-};
-
-
 const AllModule = {
  //PERMISSION FROM SUPER-ADMIN TO DEPT-HEAD
-  create: async (insertData, callback) => {
-    let con;
+  // create: async (insertData, callback) => {
+  //   let con;
     
+  //   try {
+  //     con = await oracledb.getConnection({
+  //       user: "MENU",
+  //       password: "mayin",
+  //       connectString: "192.168.3.11/system"
+  //     });
+      
+  //     const { MODULE_ID, ACCESS_USER,PERMITTED_BY } = insertData;
+  
+  //     const result = await con.execute(
+  //       "INSERT INTO MENU.MODULE_ACCESS (MODULE_ID, ACCESS_USER,PERMITTED_BY) VALUES (:MODULE_ID, :ACCESS_USER,:PERMITTED_BY)",
+  //       {
+  //         MODULE_ID: MODULE_ID,
+  //         ACCESS_USER: ACCESS_USER,
+  //         PERMITTED_BY:PERMITTED_BY
+  //       },
+  //       { autoCommit: true }
+  //     );
+  
+  //     callback(null, result.outBinds);
+  //   } catch (err) {
+  //     console.error(err);
+  //     callback(err, null);
+  //   } finally {
+  //     if (con) {
+  //       try {
+  //         await con.close();
+  //       } catch (err) {
+  //         console.error(err);
+  //       }
+  //     }
+  //   }
+  // },
+
+  create: async (permissions) => {
+    let con;
+  
     try {
       con = await oracledb.getConnection({
         user: "MENU",
         password: "mayin",
         connectString: "192.168.3.11/system"
       });
-      
-      const { MODULE_ID, ACCESS_USER,PERMITTED_BY } = insertData;
   
-      const result = await con.execute(
-        "INSERT INTO MENU.MODULE_ACCESS (MODULE_ID, ACCESS_USER,PERMITTED_BY) VALUES (:MODULE_ID, :ACCESS_USER,:PERMITTED_BY)",
-        {
-          MODULE_ID: MODULE_ID,
-          ACCESS_USER: ACCESS_USER,
-          PERMITTED_BY:PERMITTED_BY
-        },
-        { autoCommit: true }
-      );
+      const results = [];
   
-      callback(null, result.outBinds);
+      for (const permission of permissions) {
+        const { MODULE_ID, ACCESS_BY, PRIVILAGE_ID, PERMITTED_BY } = permission;
+  
+        const result = await con.execute(
+          `INSERT INTO MODULE_PRIVILAGE (MODULE_ID, ACCESS_BY, PRIVILAGE_ID, PERMITTED_BY)
+          VALUES (:MODULE_ID, :ACCESS_BY, :PRIVILAGE_ID, :PERMITTED_BY)`,
+          {
+            MODULE_ID,
+            ACCESS_BY,
+            PRIVILAGE_ID,
+            PERMITTED_BY,
+          },
+          { autoCommit: true }
+        );
+  
+        results.push(result.outBinds);
+      }
+  
+      return results;
     } catch (err) {
       console.error(err);
-      callback(err, null);
+      throw err;
     } finally {
       if (con) {
         try {
@@ -165,7 +203,7 @@ const AllModule = {
     },
 
 
-  //department permission list from suoer-admin
+  //department permission list from super-admin
   getdeptParmissionlist: (callback) => {
     async function allpermission(){
       let con;
@@ -175,7 +213,7 @@ const AllModule = {
               password        : "mayin",
               connectString   : "192.168.3.11/system"
           });
-          const data = await con.execute("SELECT * FROM MENU.MODULE_ACCESS ORDER BY INDATE DESC");
+          const data = await con.execute("SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME FROM MODULE_DETAILS WHERE ROLE_ID='2'");
           callback(null, data.rows);
       }catch(err){
           console.error(err);
@@ -194,7 +232,7 @@ const AllModule = {
               password        : "mayin",
               connectString   : "192.168.3.11/system"
           });
-          const data = await con.execute("SELECT COUNT(*) AS TOTAL_USER FROM MENU.MODULE_ACCESS  WHERE ACCESS_STAT='Y'");
+          const data = await con.execute("SELECT COUNT(*) AS TOTAL_USER FROM MODULE_DETAILS  WHERE ROLE_ID='2'");
           callback(null, data.rows);
       }catch(err){
           console.error(err);
