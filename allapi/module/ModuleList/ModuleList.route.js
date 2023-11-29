@@ -14,6 +14,7 @@ router
 .get("/dept-head-pmodule-list/:id", ModuleController.getdeptmodulelist)
 .get("/user-list/:id", ModuleController.getuserListBydeptid)
 .get("/previlage-list", ModuleController.previlageList)
+.get("/totaldesk-user", ModuleController.totalPermittedDeskUser)
 
 
 

@@ -51,7 +51,7 @@ const DeptPermission = {
   
 
    //PERMISSION LIST BY DEPARTMENT_HEAD
-   getpermissionList: async (dept_head_id, callback) => {
+   getpermissionList: async (dept_head_id,dept_id, callback) => {
     let con;
     try {
       con = await oracledb.getConnection({
@@ -61,8 +61,11 @@ const DeptPermission = {
       });
   
       const result = await con.execute(
-        "SELECT * FROM MENU.MODULE_PRIVILAGE WHERE PERMITTED_BY=:dept_head_id",
-        [dept_head_id]
+        "SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME,PERMITTED_BY FROM MODULE_DETAILS WHERE PERMITTED_BY=:dept_head_id AND DEPARTMENT=:dept_id",
+        {
+          dept_head_id: dept_head_id,
+          dept_id: dept_id
+        }
       );
   
       // Assuming you want to return the first row
@@ -80,7 +83,8 @@ const DeptPermission = {
         }
       }
     }
-  }, 
+  },
+
 
     //DESK EMPLOYEE MODULE LIST PERMISSION WISE
     getdeskpermissionModulelist: async (personalId, callback) => {

@@ -114,7 +114,27 @@ exports.deptPermissionlist = (req, res) => {
   });
 };
 
-//total permitted user 
+//total permitted desk user 
+exports.totalPermittedDeskUser = (req, res) => {
+  AllModule.getTotaldeskuser((err, module) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get total user" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = module.map((head) => ({
+      total_user: head[0],
+
+    }));
+
+    // Assuming there is only one element in the formattedDeptHead array
+    const resultObject = { total_user: formattedDeptHead[0] };
+
+    res.json(resultObject);
+  });
+};
+
+//total department head permitted user 
 exports.totalPermittedUser = (req, res) => {
   AllModule.getTotaluserlist((err, module) => {
     if (err) {
@@ -133,6 +153,7 @@ exports.totalPermittedUser = (req, res) => {
     res.json(resultObject);
   });
 };
+
 
 //Count total Module for admin 
 exports.totalModule = (req, res) => {

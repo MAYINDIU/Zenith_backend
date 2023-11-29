@@ -44,7 +44,7 @@ const Alldepthead = {
         connectString: "192.168.3.11/system"
       });
   
-      const result = await con.execute("SELECT PERSONALID,NAME,ROLE_ID,ROLE_NAME,DEPARTMENT,DEP_NAME FROM USER_ROLE_DEPT WHERE ROLE_NAME='DEPT-HEAD'");
+      const result = await con.execute("SELECT DISTINCT PERSONALID,NAME,ROLE_ID,ROLE_NAME,DEPARTMENT,DEP_NAME FROM USER_ROLE_DEPT WHERE ROLE_ID IN('0','2')");
   
       // Assuming you want to return the first row
       const data = result;

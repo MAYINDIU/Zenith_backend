@@ -87,7 +87,6 @@ const AllModule = {
     }
   },
 
-
     getAllmodule: (callback) => {
       async function allmodule(){
         let con;
@@ -213,7 +212,7 @@ const AllModule = {
               password        : "mayin",
               connectString   : "192.168.3.11/system"
           });
-          const data = await con.execute("SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME FROM MODULE_DETAILS WHERE ROLE_ID='2'");
+          const data = await con.execute("SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME FROM MODULE_DETAILS WHERE ROLE_ID IN('0','2')");
           callback(null, data.rows);
       }catch(err){
           console.error(err);
@@ -222,7 +221,7 @@ const AllModule = {
   allpermission();
 },
 
-  //total user list
+  //total dept head user list
   getTotaluserlist: (callback) => {
     async function total_user(){
       let con;
@@ -232,7 +231,7 @@ const AllModule = {
               password        : "mayin",
               connectString   : "192.168.3.11/system"
           });
-          const data = await con.execute("SELECT COUNT(*) AS TOTAL_USER FROM MODULE_DETAILS  WHERE ROLE_ID='2'");
+          const data = await con.execute("SELECT COUNT(DISTINCT DEPARTMENT) AS TOTAL_USER FROM MODULE_DETAILS WHERE ROLE_ID = '2'");
           callback(null, data.rows);
       }catch(err){
           console.error(err);
@@ -240,6 +239,26 @@ const AllModule = {
   }
   total_user();
 },
+
+  //total desk user count
+  getTotaldeskuser: (callback) => {
+    async function total_desk_user(){
+      let con;
+      try{
+          con = await oracledb.getConnection({
+              user            : "MENU",
+              password        : "mayin",
+              connectString   : "192.168.3.11/system"
+          });
+          const data = await con.execute("SELECT COUNT(DISTINCT ACCESS_BY) AS TOTAL_USER FROM MODULE_DETAILS WHERE ROLE_ID = '1'");
+          callback(null, data.rows);
+      }catch(err){
+          console.error(err);
+      }
+  }
+  total_desk_user();
+},
+
 
   //count total module list
   getTotalModule: (callback) => {
@@ -272,7 +291,7 @@ const AllModule = {
       });
   
       const result = await con.execute(
-        "SELECT M.MODULE_NAME, M.MODULE_ID FROM MENU.MODULE_ACCESS MA JOIN MENU.MODULES M ON MA.module_id = M.module_id WHERE MA.ACCESS_USER =:personalId",
+        "SELECT MODULE_NAME,MODULE_ID FROM MODULE_DETAILS WHERE ACCESS_BY=:personalId",
         [personalId]
       );
   
