@@ -85,6 +85,40 @@ const DeptPermission = {
     }
   },
 
+    //PRIVILAGE LIST BY DESK USER_ID
+     getDeskuserPrivilageList: async (module_id,access_by, callback) => {
+      let con;
+      try {
+        con = await oracledb.getConnection({
+          user: "MENU",
+          password: "mayin",
+          connectString: "192.168.3.11/system"
+        });
+    
+        const result = await con.execute(
+          "SELECT P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS  WHERE  MODULE_ID=:module_id AND ACCESS_BY=:access_by",
+          {
+            module_id: module_id,
+            access_by: access_by
+          }
+        );
+    
+        // Assuming you want to return the first row
+        const data = result;
+        callback(null, data.rows);
+      } catch (err) {
+        console.error(err);
+        callback(err, null);
+      } finally {
+        if (con) {
+          try {
+            await con.close();
+          } catch (err) {
+            console.error(err);
+          }
+        }
+      }
+    },
 
     //DESK EMPLOYEE MODULE LIST PERMISSION WISE
     getdeskpermissionModulelist: async (personalId, callback) => {
@@ -97,7 +131,8 @@ const DeptPermission = {
         });
     
         const result = await con.execute(
-          "SELECT M.MODULE_NAME, M.MODULE_ID,MA.PRIVILAGE_ID,MA.PERMITTED_BY FROM MENU.MODULE_PRIVILAGE MA JOIN MENU.MODULES M ON MA.module_id = M.module_id WHERE MA.ACCESS_BY =:personalId",
+          // "SELECT M.MODULE_NAME, M.MODULE_ID,MA.PRIVILAGE_ID,MA.PERMITTED_BY FROM MENU.MODULE_PRIVILAGE MA JOIN MENU.MODULES M ON MA.module_id = M.module_id WHERE MA.ACCESS_BY =:personalId",
+         "SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS WHERE ACCESS_BY =:personalId",
           [personalId]
         );
     
