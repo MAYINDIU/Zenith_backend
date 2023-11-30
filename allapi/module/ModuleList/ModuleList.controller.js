@@ -242,7 +242,7 @@ exports.previlageList = (req, res) => {
 
     }));
 
-    res.json({ previlage_list: formattedDeptHead });
+    res.json({ privilage_list: formattedDeptHead });
   });
 };
   

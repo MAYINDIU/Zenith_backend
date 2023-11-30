@@ -111,9 +111,9 @@ exports.createDATA = async (req, res) => {
   //privilage list for desk user
   exports.getDeskprivilageList = (req, res) => {
     const module_id = req.params.module_id;
-    const access_by = req.params.access_by;
+    const dept_id = req.params.dept_id;
 
-    DeptPermission.getDeskuserPrivilageList(module_id, access_by, (err, module_list) => {
+    DeptPermission.getDeskuserPrivilageList(module_id, dept_id, (err, module_list) => {
       if (err) {
         return res.status(500).json({ error: "Failed to get user data" });
       }
@@ -123,10 +123,12 @@ exports.createDATA = async (req, res) => {
 
        // Map the dept_head data to the desired format
     const formattedDeptHead = module_list.map((head) => ({
-      p_read: head[0],
-      p_create: head[1],
-      p_edit: head[2],
-      p_delete: head[3]
+      personal_id: head[0],
+      name: head[1],
+      p_read: head[2],
+      p_create: head[3],
+      p_edit: head[4],
+      p_delete: head[5]
     }));
 
     res.json({ privilage_list: formattedDeptHead });

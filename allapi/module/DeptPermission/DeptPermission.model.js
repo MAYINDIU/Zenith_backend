@@ -86,7 +86,7 @@ const DeptPermission = {
   },
 
     //PRIVILAGE LIST BY DESK USER_ID
-     getDeskuserPrivilageList: async (module_id,access_by, callback) => {
+     getDeskuserPrivilageList: async (module_id,dept_id, callback) => {
       let con;
       try {
         con = await oracledb.getConnection({
@@ -96,10 +96,10 @@ const DeptPermission = {
         });
     
         const result = await con.execute(
-          "SELECT P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS  WHERE  MODULE_ID=:module_id AND ACCESS_BY=:access_by",
+          "SELECT  ACCESS_BY,NAME,P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS WHERE  MODULE_ID=:module_id AND DEPARTMENT=:dept_id AND ROLE_ID='1'",
           {
             module_id: module_id,
-            access_by: access_by
+            dept_id: dept_id
           }
         );
     
