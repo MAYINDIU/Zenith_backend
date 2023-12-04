@@ -61,7 +61,7 @@ const DeptPermission = {
       });
   
       const result = await con.execute(
-        "SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME,PERMITTED_BY FROM MODULE_DETAILS WHERE PERMITTED_BY=:dept_head_id AND DEPARTMENT=:dept_id",
+        "SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME,PERMITTED_BY,ACCESS_BY FROM MODULE_DETAILS_ALL WHERE PERMITTED_BY=:dept_head_id AND DEPARTMENT=:dept_id",
         {
           dept_head_id: dept_head_id,
           dept_id: dept_id
@@ -96,7 +96,7 @@ const DeptPermission = {
         });
     
         const result = await con.execute(
-          "SELECT  ACCESS_BY,NAME,P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS WHERE  MODULE_ID=:module_id AND DEPARTMENT=:dept_id AND ROLE_ID='1'",
+          "SELECT  ACCESS_BY,NAME,P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS_ALL WHERE  MODULE_ID=:module_id AND DEPARTMENT=:dept_id AND ROLE_ID='1'",
           {
             module_id: module_id,
             dept_id: dept_id
@@ -132,7 +132,7 @@ const DeptPermission = {
     
         const result = await con.execute(
           // "SELECT M.MODULE_NAME, M.MODULE_ID,MA.PRIVILAGE_ID,MA.PERMITTED_BY FROM MENU.MODULE_PRIVILAGE MA JOIN MENU.MODULES M ON MA.module_id = M.module_id WHERE MA.ACCESS_BY =:personalId",
-         "SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS WHERE ACCESS_BY =:personalId",
+         "SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS_ALL WHERE ACCESS_BY =:personalId",
           [personalId]
         );
     
@@ -152,6 +152,43 @@ const DeptPermission = {
         }
       }
     },
+
+
+  //SINGLE PREVILAGE DETAILS BY ACCESS_ID + MODULE_ID
+  getSinglePrivilage: async (access_by,module_id, callback) => {
+    let con;
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system"
+      });
+  
+      const result = await con.execute(
+        "SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME,PERMITTED_BY,ACCESS_BY FROM MODULE_DETAILS_ALL WHERE ACCESS_BY=:access_by AND MODULE_ID=:module_id",
+        {
+          access_by: access_by,
+          module_id: module_id
+        }
+      );
+  
+      // Assuming you want to return the first row
+      const data = result;
+      callback(null, data.rows);
+    } catch (err) {
+      console.error(err);
+      callback(err, null);
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
+
 
 
 };

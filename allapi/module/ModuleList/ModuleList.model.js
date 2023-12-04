@@ -212,7 +212,7 @@ const AllModule = {
               password        : "mayin",
               connectString   : "192.168.3.11/system"
           });
-          const data = await con.execute("SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME FROM MODULE_DETAILS WHERE ROLE_ID IN('0','2')");
+          const data = await con.execute("SELECT  DISTINCT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME  FROM MODULE_DETAILS_ALL WHERE ROLE_ID='2' AND (P_READ IS  NOT NULL OR P_CREATE IS  NOT NULL OR P_EDIT IS  NOT NULL OR P_DELETE IS  NOT NULL)");
           callback(null, data.rows);
       }catch(err){
           console.error(err);
@@ -231,7 +231,7 @@ const AllModule = {
               password        : "mayin",
               connectString   : "192.168.3.11/system"
           });
-          const data = await con.execute("SELECT COUNT(DISTINCT DEPARTMENT) AS TOTAL_USER FROM MODULE_DETAILS WHERE ROLE_ID = '2'");
+          const data = await con.execute("SELECT COUNT(DISTINCT DEPARTMENT) AS TOTAL_USER FROM MODULE_DETAILS_ALL WHERE ROLE_ID = '2'");
           callback(null, data.rows);
       }catch(err){
           console.error(err);
@@ -250,7 +250,7 @@ const AllModule = {
               password        : "mayin",
               connectString   : "192.168.3.11/system"
           });
-          const data = await con.execute("SELECT COUNT(DISTINCT ACCESS_BY) AS TOTAL_USER FROM MODULE_DETAILS WHERE ROLE_ID = '1'");
+          const data = await con.execute("SELECT COUNT(DISTINCT ACCESS_BY) AS TOTAL_USER FROM MODULE_DETAILS_ALL WHERE ROLE_ID = '1'");
           callback(null, data.rows);
       }catch(err){
           console.error(err);
@@ -291,7 +291,7 @@ const AllModule = {
       });
   
       const result = await con.execute(
-        "SELECT MODULE_NAME,MODULE_ID FROM MODULE_DETAILS WHERE ACCESS_BY=:personalId",
+        "SELECT MODULE_NAME,MODULE_ID FROM MODULE_DETAILS_ALL WHERE ACCESS_BY=:personalId AND (P_READ IS  NOT NULL OR P_CREATE IS  NOT NULL OR P_EDIT IS  NOT NULL OR P_DELETE IS  NOT NULL)",
         [personalId]
       );
   
