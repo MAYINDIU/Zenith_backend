@@ -48,7 +48,52 @@ const DeptPermission = {
     }
   }
 },
+
+   //PERMISSION FROM DEPT-HEAD TO DESK
+ Newcreate: async (permission) => {
+  let con;
+
+  try {
+    con = await oracledb.getConnection({
+      user: "MENU",
+      password: "mayin",
+      connectString: "192.168.3.11/system"
+    });
+
+    const results = [];
+
   
+      const { MODULE_ID, ACCESS_BY, PRIVILAGE_ID, PERMITTED_BY,PERMIT} = permission;
+
+      const result = await con.execute(`BEGIN MENU.MODULE_INSERT_DELETE(:MODULE_ID,:ACCESS_BY,:PRIVILAGE_ID,:PERMITTED_BY,:PERMIT); END;`,
+        {
+          MODULE_ID,
+          ACCESS_BY,
+          PRIVILAGE_ID,
+          PERMITTED_BY,
+          PERMIT,
+        },
+        { autoCommit: true }
+      );
+
+      results.push(result.outBinds);
+
+
+    return results;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  } finally {
+    if (con) {
+      try {
+        await con.close();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+},
+   //PERMISSION FROM DEPT-HEAD TO DESK
 
    //PERMISSION LIST BY DEPARTMENT_HEAD
    getpermissionList: async (dept_head_id,dept_id, callback) => {

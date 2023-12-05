@@ -24,6 +24,30 @@ exports.createDATA = async (req, res) => {
 
 };
 
+exports.createNEWDATA = async (req, res) => {
+  const per = req.body;
+
+  try {
+    const results = await DeptPermission.Newcreate(per);
+    res.status(201).json("Permission Successfully");
+  } catch (error) {
+    console.error('Error creating permissions:', error);
+    res.status(500).json("Already Permitted");
+  }
+
+  // DeptPermission.create((err, permissions) => {
+  //   if (err) {
+  //     console.error('Error creating data:', err);
+  //     return res.status(500).json('Already Permitted');
+  //   }
+
+  //   console.log('Data created successfully with ID');
+  //   res.status(201).json("Permission Successfully");
+  // });
+
+};
+
+
   //dept_head_id wise list
   exports.getallpermissionList = (req, res) => {
     const dept_head_id = req.params.dept_head_id;
