@@ -15,10 +15,6 @@ exports.createDATA = async (req, res) => {
 };
 
 
-
-
-
-
 //all modules list
 exports.getAllmodules = (req, res) => {
     AllModule.getAllmodule((err, module) => {
@@ -245,5 +241,28 @@ exports.previlageList = (req, res) => {
     res.json({ privilage_list: formattedDeptHead });
   });
 };
+
+
+//get all role list
+exports.getRoleList = (req, res) => {
+  AllModule.getRoleList((err, module) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get role list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = module.map((head) => ({
+      module_id: head[0],
+      module_name: head[1],
+      route: head[2],
+      created_date: head[3],
+      created_by: head[4],
+    }));
+
+    res.json({ role_list: formattedDeptHead });
+  });
+};
+
+
   
   

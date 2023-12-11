@@ -23,6 +23,7 @@ exports.getLoginById = (req, res) => {
         ROLE_NAME: user_data[3],
         DEPT_CODE: user_data[4],
         DEPT_NAME: user_data[5],
+        PROJECT: user_data[6],
       };
   
       res.json({ user_details: formattedDeptHead });

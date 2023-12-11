@@ -32,7 +32,7 @@ exports.createNEWDATA = async (req, res) => {
     res.status(201).json("Permission Successfully");
   } catch (error) {
     console.error('Error creating permissions:', error);
-    res.status(500).json("Already Permitted");
+    res.status(500).json(error);
   }
 
   // DeptPermission.create((err, permissions) => {
@@ -157,7 +157,7 @@ exports.createNEWDATA = async (req, res) => {
       p_delete: head[5]
     }));
 
-    res.json({ privilage_list: formattedDeptHead });
+    res.json(formattedDeptHead);
   });
   
 
@@ -165,6 +165,75 @@ exports.createNEWDATA = async (req, res) => {
 
 
   };
+
+  
+  //privilage list for role user
+  exports.getprivilageListRole = (req, res) => {
+    const module_id = req.params.module_id;
+
+
+    DeptPermission.getPrivilageListModuleId(module_id, (err, module_list) => {
+      if (err) {
+        return res.status(500).json({ error: "Failed to get role data" });
+      }
+      if (!module_list) {
+        return res.status(404).json({ error: "Module not found" });
+      }
+
+       // Map the dept_head data to the desired format
+    const formattedDeptHead = module_list.map((head) => ({
+      role_id: head[0],
+      role_name: head[1],
+      module_id: head[2],
+      p_read: head[3],
+      p_create: head[4],
+      p_edit: head[5],
+      p_delete: head[6]
+    }));
+
+    res.json(formattedDeptHead);
+  });
+  
+
+
+
+
+  };
+
+  
+   //privilage list for project user
+  exports.getprivilageListProject = (req, res) => {
+    const module_id = req.params.module_id;
+
+
+    DeptPermission.getProjectPrevModuleId(module_id, (err, module_list) => {
+      if (err) {
+        return res.status(500).json({ error: "Failed to get role data" });
+      }
+      if (!module_list) {
+        return res.status(404).json({ error: "Module not found" });
+      }
+
+       // Map the dept_head data to the desired format
+    const formattedDeptHead = module_list.map((head) => ({
+      project_id: head[0],
+      project_name: head[1],
+      module_id: head[2],
+      p_read: head[3],
+      p_create: head[4],
+      p_edit: head[5],
+      p_delete: head[6]
+    }));
+
+    res.json(formattedDeptHead);
+  });
+  
+
+
+
+
+  };
+
 
 
   //getSinglePrivilage by access_by and module id wise

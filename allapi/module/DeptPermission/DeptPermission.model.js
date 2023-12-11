@@ -63,15 +63,16 @@ const DeptPermission = {
     const results = [];
 
   
-      const { MODULE_ID, ACCESS_BY, PRIVILAGE_ID, PERMITTED_BY,PERMIT} = permission;
+      const { MODULE_ID, ACCESS_BY, PRIVILAGE_ID, PERMITTED_BY,PROCESS,TYPE} = permission;
 
-      const result = await con.execute(`BEGIN MENU.MODULE_INSERT_DELETE(:MODULE_ID,:ACCESS_BY,:PRIVILAGE_ID,:PERMITTED_BY,:PERMIT); END;`,
+      const result = await con.execute(`BEGIN MENU.MODULE_INSERT_DELETE(:MODULE_ID,:ACCESS_BY,:PRIVILAGE_ID,:PERMITTED_BY,:PROCESS,:TYPE); END;`,
         {
           MODULE_ID,
           ACCESS_BY,
           PRIVILAGE_ID,
           PERMITTED_BY,
-          PERMIT,
+          PROCESS,
+          TYPE,
         },
         { autoCommit: true }
       );
@@ -106,7 +107,7 @@ const DeptPermission = {
       });
   
       const result = await con.execute(
-        "SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME,PERMITTED_BY,ACCESS_BY FROM MODULE_DETAILS_ALL WHERE PERMITTED_BY=:dept_head_id AND DEPARTMENT=:dept_id",
+        "SELECT MODULE_ID,MODULE_NAME,P_READ,P_CREATE,P_EDIT,P_DELETE,NAME,DEP_NAME,PERMITTED_BY,ACCESS_BY FROM MODULE_DETAILS_ALL WHERE PERMITTED_BY=:dept_head_id AND DEPARTMENT=:dept_id ORDER BY MODULE_ID",
         {
           dept_head_id: dept_head_id,
           dept_id: dept_id
@@ -131,7 +132,7 @@ const DeptPermission = {
   },
 
     //PRIVILAGE LIST BY DESK USER_ID
-     getDeskuserPrivilageList: async (module_id,dept_id, callback) => {
+    getDeskuserPrivilageList: async (module_id,dept_id, callback) => {
       let con;
       try {
         con = await oracledb.getConnection({
@@ -164,6 +165,74 @@ const DeptPermission = {
         }
       }
     },
+
+    //PRIVILAGE LIST BY  MODULE_ID FOR ROLE WISE PERMISSION
+      getPrivilageListModuleId: async (module_id, callback) => {
+        let con;
+        try {
+          con = await oracledb.getConnection({
+            user: "MENU",
+            password: "mayin",
+            connectString: "192.168.3.11/system"
+          });
+      
+          const result = await con.execute(
+            "SELECT DISTINCT ROLE_ID, ROLE_NAME, MODULE_ID, P_READ,P_CREATE,P_EDIT,P_DELETE FROM (SELECT DISTINCT ROLE_ID, ROLE_NAME, MODULE_ID, TYPE_NAME, CASE WHEN A.ROLE_ID=B.TYPE_ID THEN PRIVILAGE_ID ELSE NULL END PRIVILAGE_ID FROM MENU.MENU_ROLE A,(SELECT DISTINCT X.MODULE_ID,TYPE_ID,TYPE_NAME, CASE WHEN X.MODULE_ID=Y.MODULE_ID THEN PRIVILAGE_ID ELSE NULL END PRIVILAGE_ID FROM MENU.MODULES X,MENU.MODULE_ROLE Y) B WHERE A.ROLE_ID NOT IN (0,1,2,9) AND TYPE_NAME='ROLE' ) PIVOT(MIN (PRIVILAGE_ID) FOR PRIVILAGE_ID IN (1 P_READ, 2 P_CREATE, 3 P_EDIT, 4 P_DELETE)) WHERE MODULE_ID=:module_id ORDER BY ROLE_NAME",
+            {
+              module_id: module_id
+            }
+          );
+      
+          // Assuming you want to return the first row
+          const data = result;
+          callback(null, data.rows);
+        } catch (err) {
+          console.error(err);
+          callback(err, null);
+        } finally {
+          if (con) {
+            try {
+              await con.close();
+            } catch (err) {
+              console.error(err);
+            }
+          }
+        }
+      },
+  //PRIVILAGE LIST BY  MODULE_ID FOR PROJECT WISE PERMISSION
+  getProjectPrevModuleId: async (module_id, callback) => {
+    let con;
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system"
+      });
+  
+      const result = await con.execute(
+        "SELECT DISTINCT CODE, NAME, MODULE_ID, P_READ,P_CREATE,P_EDIT,P_DELETE FROM(SELECT DISTINCT CODE, NAME, MODULE_ID, TYPE_NAME, CASE WHEN A.CODE=B.TYPE_ID THEN PRIVILAGE_ID ELSE NULL END PRIVILAGE_ID FROM POLICY_MANAGEMENT.PD A,(SELECT DISTINCT X.MODULE_ID,TYPE_ID,TYPE_NAME, CASE WHEN X.MODULE_ID=Y.MODULE_ID THEN PRIVILAGE_ID ELSE NULL END PRIVILAGE_ID FROM MENU.MODULES X,MENU.MODULE_ROLE Y) B WHERE A.CODE!='18' AND TYPE_NAME='PROJECT') PIVOT (MIN (PRIVILAGE_ID) FOR PRIVILAGE_ID IN (1 P_READ, 2 P_CREATE, 3 P_EDIT, 4 P_DELETE))WHERE MODULE_ID=:module_id ORDER BY CODE",
+        {
+          module_id: module_id
+        }
+      );
+  
+      // Assuming you want to return the first row
+      const data = result;
+      callback(null, data.rows);
+    } catch (err) {
+      console.error(err);
+      callback(err, null);
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
+
 
     //DESK EMPLOYEE MODULE LIST PERMISSION WISE
     getdeskpermissionModulelist: async (personalId, callback) => {

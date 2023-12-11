@@ -13,7 +13,7 @@ const Login = {
           });
       
           const result = await con.execute(
-            "SELECT PERSONALID,NAME,ROLE_ID,ROLE_NAME,DEPARTMENT,DEP_NAME FROM USER_ROLE_DEPT WHERE PERSONALID = :personalId AND USER_PASSWORD = :password",
+            "SELECT PERSONALID,NAME,ROLE_ID,ROLE_NAME,DEPARTMENT,DEP_NAME,PROJECT FROM USER_ROLE_DEPT WHERE PERSONALID = :personalId AND USER_PASSWORD = :password",
             {
               personalId: personalId,
               password: password

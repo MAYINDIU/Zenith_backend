@@ -87,6 +87,7 @@ const AllModule = {
     }
   },
 
+  //AL MODULE LIST
     getAllmodule: (callback) => {
       async function allmodule(){
         let con;
@@ -329,6 +330,25 @@ const AllModule = {
       }
   }
   allprevilage();
+},
+
+  //ALL ROLE LIST
+  getRoleList: (callback) => {
+    async function roleList(){
+      let con;
+      try{
+          con = await oracledb.getConnection({
+              user            : "MENU",
+              password        : "mayin",
+              connectString   : "192.168.3.11/system"
+          });
+          const data = await con.execute("SELECT ROLE_ID,ROLE_NAME FROM MENU.MENU_ROLE WHERE ROLE_ID>2 ORDER  BY ROLE_NAME");
+          callback(null, data.rows);
+      }catch(err){
+          console.error(err);
+      }
+  }
+  roleList();
 },
 
 
