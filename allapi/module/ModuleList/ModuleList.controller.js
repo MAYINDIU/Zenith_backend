@@ -63,6 +63,35 @@ exports.getAllmodules = (req, res) => {
     });
   };
 
+
+    //Dept permission list by moduleId
+    exports.getDeptPermissionList = (req, res) => {
+      const moduleId = req.params.id;
+    
+      AllModule.getDeptplistBymoduleId
+      (moduleId, (err, dept_list) => {
+        if (err) {
+          return res.status(500).json({ error: "Failed to get module data" });
+        }
+    
+        if (!dept_list || dept_list.length === 0) {
+          return res.status(404).json({ error: "Module not found" });
+        }
+    
+        // Assuming each inner array represents a module
+        const formattedModuleList = dept_list.map(moduleArray => {
+          return {
+            ACCESS_BY: moduleArray[0],
+            DEP_NAME: moduleArray[1],
+            PROJECT: moduleArray[2],
+            PERMIT_STATUS: moduleArray[3],
+          };
+        });
+    
+        res.json(formattedModuleList);
+      });
+    };
+
     //module id wise department list
     exports.getdeptListByMid = (req, res) => {
       const moduleId = req.params.id;
@@ -262,6 +291,32 @@ exports.getRoleList = (req, res) => {
     res.json({ role_list: formattedDeptHead });
   });
 };
+
+
+
+    //project list by personal id wise
+    exports.getProjectlist = (req, res) => {
+      const personalId = req.params.id;
+    
+      AllModule.getprojectlist(personalId, (err, project_list) => {
+        if (err) {
+          return res.status(500).json({ error: "Failed to get module data" });
+        }
+    
+        if (!project_list || project_list.length === 0) {
+          return res.status(404).json({ error: "Module not found" });
+        }
+    
+        // Assuming each inner array represents a module
+        const formattedModuleList = project_list.map(moduleArray => {
+          return {
+            PROJECT_ID: moduleArray[0]
+          };
+        });
+    
+        res.json({ project_list: formattedModuleList });
+      });
+    };
 
 
   

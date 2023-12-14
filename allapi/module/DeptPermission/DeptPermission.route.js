@@ -12,6 +12,10 @@ router
 .get('/role-privilage-list/:module_id', DeptController.getprivilageListRole)
 .get('/project-privilage-list/:module_id', DeptController.getprivilageListProject)
 
+.get('/permission-module-list/:personalId/:project_id', DeptController.getDeskprivilageList)
+
+
+
 
 
 

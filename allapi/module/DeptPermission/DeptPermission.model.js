@@ -94,10 +94,10 @@ const DeptPermission = {
     }
   }
 },
-   //PERMISSION FROM DEPT-HEAD TO DESK
+  //PERMISSION FROM DEPT-HEAD TO DESK
 
    //PERMISSION LIST BY DEPARTMENT_HEAD
-   getpermissionList: async (dept_head_id,dept_id, callback) => {
+  getpermissionList: async (dept_head_id,dept_id, callback) => {
     let con;
     try {
       con = await oracledb.getConnection({
@@ -283,6 +283,42 @@ const DeptPermission = {
         {
           access_by: access_by,
           module_id: module_id
+        }
+      );
+  
+      // Assuming you want to return the first row
+      const data = result;
+      callback(null, data.rows);
+    } catch (err) {
+      console.error(err);
+      callback(err, null);
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
+
+
+   //MODULE LIST BY PROJECT_ID
+   getModuleListbyProjId: async (personalId,project_id, callback) => {
+    let con;
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system"
+      });
+  
+      const result = await con.execute(
+        "SELECT MODULE_NAME,MODULE_ID from MODULE_DETAILS_ALL WHERE PROJECT=:project_id AND PERSONALID=:personalId",
+        {
+          personalId: personalId,
+          project_id: project_id
         }
       );
   

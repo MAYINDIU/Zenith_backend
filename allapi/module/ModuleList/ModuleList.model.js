@@ -203,6 +203,42 @@ const AllModule = {
     },
 
 
+
+    //Department Permission list show by module_id
+    getDeptplistBymoduleId: async (moduleId, callback) => {
+      let con;
+      try {
+        con = await oracledb.getConnection({
+          user: "MENU",
+          password: "mayin",
+          connectString: "192.168.3.11/system"
+        });
+    
+        const result = await con.execute(
+          "SELECT ACCESS_BY,DEP_NAME,PROJECT,CASE WHEN P_READ=1 THEN 1 ELSE NULL END PERMITTED_STATUS FROM MENU.MODULE_DETAILS_ALL WHERE ROLE_ID IN(0,2) AND MODULE_ID=:moduleId ORDER BY DEP_NAME",
+          [moduleId]
+        );
+    
+        // Assuming you want to return the first row
+        const data = result;
+        callback(null, data.rows);
+      } catch (err) {
+        console.error(err);
+        callback(err, null);
+      } finally {
+        if (con) {
+          try {
+            await con.close();
+          } catch (err) {
+            console.error(err);
+          }
+        }
+      }
+    },
+
+
+
+
   //department permission list from super-admin
   getdeptParmissionlist: (callback) => {
     async function allpermission(){
@@ -351,6 +387,39 @@ const AllModule = {
   roleList();
 },
 
+
+
+  //PROJECT LIST FETCH BY PERSONAL_ID 
+  getprojectlist: async (personalId, callback) => {
+    let con;
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system"
+      });
+  
+      const result = await con.execute(
+        "SELECT  DISTINCT PROJECT FROM MENU.USER_ROLE_DEPT WHERE PERSONALID=:personalId  AND DSGN=(SELECT MAX(DSGN) FROM MENU.USER_ROLE_DEPT WHERE PERSONALID=:personalId)",
+        [personalId]
+      );
+  
+      // Assuming you want to return the first row
+      const data = result;
+      callback(null, data.rows);
+    } catch (err) {
+      console.error(err);
+      callback(err, null);
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
 
 };
   

@@ -272,3 +272,33 @@ exports.createNEWDATA = async (req, res) => {
   
   
     };
+
+
+   //Module list by personal_id and project_id
+  exports.getDeskprivilageList = (req, res) => {
+    const personalId = req.params.personalId;
+    const project_id = req.params.project_id;
+
+    DeptPermission.getModuleListbyProjId(personalId, project_id, (err, module_list) => {
+      if (err) {
+        return res.status(500).json({ error: "Failed to get user data" });
+      }
+      if (!module_list) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+       // Map the dept_head data to the desired format
+    const formattedDeptHead = module_list.map((head) => ({
+      MODULE_NAME: head[0],
+      MODULE_ID: head[1],
+
+    }));
+
+    res.json(formattedDeptHead);
+  });
+  
+
+
+
+
+  };

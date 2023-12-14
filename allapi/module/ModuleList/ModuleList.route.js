@@ -18,6 +18,10 @@ router
 .get("/user-list/:id", ModuleController.getuserListBydeptid)
 .get("/previlage-list", ModuleController.previlageList)
 .get("/totaldesk-user", ModuleController.totalPermittedDeskUser)
+.get("/getDeptPermissionList/:id", ModuleController.getDeptPermissionList)
+.get("/project-list/:id", ModuleController.getProjectlist)
+
+
 
 
 
