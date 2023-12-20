@@ -131,40 +131,44 @@ const DeptPermission = {
     }
   },
 
-    //PRIVILAGE LIST BY DESK USER_ID
-    getDeskuserPrivilageList: async (module_id,dept_id, callback) => {
-      let con;
-      try {
-        con = await oracledb.getConnection({
-          user: "MENU",
-          password: "mayin",
-          connectString: "192.168.3.11/system"
-        });
-    
-        const result = await con.execute(
-          "SELECT  ACCESS_BY,NAME,P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS_ALL WHERE  MODULE_ID=:module_id AND DEPARTMENT=:dept_id AND ROLE_ID='1'",
-          {
-            module_id: module_id,
-            dept_id: dept_id
-          }
-        );
-    
-        // Assuming you want to return the first row
-        const data = result;
-        callback(null, data.rows);
-      } catch (err) {
-        console.error(err);
-        callback(err, null);
-      } finally {
-        if (con) {
-          try {
-            await con.close();
-          } catch (err) {
-            console.error(err);
-          }
+
+  //PRIVILAGE LIST FOR DESK USER
+   getDeskUserPrevList: async (module_id,dept_id, callback) => {
+    let con;
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system"
+      });
+  
+      const result = await con.execute(
+        "SELECT  ACCESS_BY,NAME,P_READ,P_CREATE,P_EDIT,P_DELETE FROM MODULE_DETAILS_ALL WHERE  MODULE_ID=:module_id AND DEPARTMENT=:dept_id AND ROLE_ID='1'",
+        {
+          module_id: module_id,
+          dept_id: dept_id
+        }
+      );
+  
+      // Assuming you want to return the first row
+      const data = result;
+      callback(null, data.rows);
+    } catch (err) {
+      console.error(err);
+      callback(err, null);
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
         }
       }
-    },
+    }
+  },
+
+
+  
 
     //PRIVILAGE LIST BY  MODULE_ID FOR ROLE WISE PERMISSION
       getPrivilageListModuleId: async (module_id, callback) => {
@@ -315,7 +319,7 @@ const DeptPermission = {
       });
   
       const result = await con.execute(
-        "SELECT MODULE_NAME,MODULE_ID from MODULE_DETAILS_ALL WHERE PROJECT=:project_id AND PERSONALID=:personalId",
+        "SELECT MODULE_NAME,MODULE_ID,P_READ,P_CREATE,P_EDIT,P_DELETE from MODULE_DETAILS_ALL WHERE PROJECT=:project_id AND PERSONALID=:personalId",
         {
           personalId: personalId,
           project_id: project_id

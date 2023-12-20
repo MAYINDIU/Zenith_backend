@@ -86,6 +86,38 @@ exports.createNEWDATA = async (req, res) => {
   };
 
 
+    //desk user previlage  list
+    exports.getdeskuserprevList = (req, res) => {
+      const module_id = req.params.module_id;
+      const dept_id = req.params.dept_id;
+  
+      DeptPermission.getDeskUserPrevList(module_id, dept_id, (err, module_list) => {
+        if (err) {
+          return res.status(500).json({ error: "Failed to get user data" });
+        }
+        if (!module_list) {
+          return res.status(404).json({ error: "User not found" });
+        }
+  
+         // Map the dept_head data to the desired format
+      const formattedDeptHead = module_list.map((head) => ({
+        personal_id: head[0],
+        name: head[1],
+        p_read: head[2],
+        p_create: head[3],
+        p_edit: head[4],
+        p_delete: head[5], 
+      }));
+      res.json( formattedDeptHead );
+    });
+    
+  
+  
+  
+  
+    };
+
+
   //permitted desk employee module list personal_id wise
   exports.getdeskmodulelist = (req, res) => {
         const personalId = req.params.id;
@@ -132,38 +164,6 @@ exports.createNEWDATA = async (req, res) => {
         res.json({ module_list: formattedDeptHead });
       });
       
-  };
-
-  //privilage list for desk user
-  exports.getDeskprivilageList = (req, res) => {
-    const module_id = req.params.module_id;
-    const dept_id = req.params.dept_id;
-
-    DeptPermission.getDeskuserPrivilageList(module_id, dept_id, (err, module_list) => {
-      if (err) {
-        return res.status(500).json({ error: "Failed to get user data" });
-      }
-      if (!module_list) {
-        return res.status(404).json({ error: "User not found" });
-      }
-
-       // Map the dept_head data to the desired format
-    const formattedDeptHead = module_list.map((head) => ({
-      personal_id: head[0],
-      name: head[1],
-      p_read: head[2],
-      p_create: head[3],
-      p_edit: head[4],
-      p_delete: head[5]
-    }));
-
-    res.json(formattedDeptHead);
-  });
-  
-
-
-
-
   };
 
   
@@ -291,7 +291,10 @@ exports.createNEWDATA = async (req, res) => {
     const formattedDeptHead = module_list.map((head) => ({
       MODULE_NAME: head[0],
       MODULE_ID: head[1],
-
+      P_READ: head[2],
+      P_CREATE: head[3],
+      P_EDIT: head[3],
+      P_DELETE: head[4]
     }));
 
     res.json(formattedDeptHead);
