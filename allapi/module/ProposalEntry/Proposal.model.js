@@ -45,7 +45,7 @@ const proposal = {
   },
 
   //CHAIN LIST
-  getchainListbyprojectid: async (project_id, callback) => {
+  getchainListbyprojectid: async (base_project, base_code, callback) => {
     let con;
     try {
       con = await oracledb.getConnection({
@@ -55,8 +55,40 @@ const proposal = {
       });
 
       const result = await con.execute(
-        "SELECT DSGN,NAME FROM POLICY_MANAGEMENT.TIER_DETAIL_RND  WHERE PROJECT=:project_id AND CHAIN_STATUS='A'  ",
-        [project_id]
+        "SELECT CHAIN_NAME,CHAIN_CODE,CHAIN_DESIGNATION FROM POLICY_MANAGEMENT.ALL_SENIOR_INFO_DETAILS WHERE BASE_PROJECT=:base_project AND  BASE_CODE=:base_code AND BASE_DSGN='01'",
+        [base_project, base_code]
+      );
+
+      // Assuming you want to return the first row
+      const data = result;
+      callback(null, data.rows);
+    } catch (err) {
+      console.error(err);
+      callback(err, null);
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
+
+  //PROPOSAL INFORMATION
+  getProposalInfo: async (proposal_no, callback) => {
+    let con;
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system",
+      });
+
+      const result = await con.execute(
+        "SELECT PROPOSAL_N,PROPOSAL_D,RISKDATE,TABLE_ID,TERM,SUM_INSURE,SUMATRISK,PROPOSER,SALUTE,ADDRESS1,ADDRESS2,CITY,ZIP,MOBILE,DOB,AGE,AGE_P_CODE,FATHERHUSB,SEX,OCCUPATION,INSTMODE,TOTALINST,INSTNO,AGENT_ID,PD_CODE,MOTHERS_NAME,FATHERS_NAME,MARITAL_STATUS FROM POLICY_MANAGEMENT.PROPOSAL_DUMMY WHERE PROPOSAL_N=:proposal_no",
+        { proposal_no: proposal_no }
       );
 
       // Assuming you want to return the first row
