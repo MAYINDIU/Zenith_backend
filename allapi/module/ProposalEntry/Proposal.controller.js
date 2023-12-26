@@ -110,6 +110,98 @@ exports.getProposalInformation = (req, res) => {
         mothers_name: proposal[25],
         fathers_name: proposal[26],
         marital_status: proposal[27],
+        nid_number: proposal[28],
+      };
+    });
+
+    res.json(formattedModuleList);
+  });
+};
+
+//AGENT LIST
+exports.getAgentList = (req, res) => {
+  const base_project = req.params.base_project;
+
+  ProposalModule.getAgentList(base_project, (err, agent_list) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get agent list data" });
+    }
+
+    if (!agent_list || agent_list.length === 0) {
+      return res.status(404).json({ error: "Agent not found" });
+    }
+
+    // Assuming each inner array represents a module
+    const formattedModuleList = agent_list.map((agentArray) => {
+      return {
+        agent_name: agentArray[0],
+        agent_code: agentArray[1],
+      };
+    });
+
+    res.json(formattedModuleList);
+  });
+};
+
+//DIVISION LIST
+exports.getAllDivision = (req, res) => {
+  ProposalModule.getDivisionList((err, division) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get division list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = division.map((head) => ({
+      division_name: head[0],
+      div_code: head[1],
+    }));
+
+    res.json(formattedDeptHead);
+  });
+};
+
+exports.getAgentList = (req, res) => {
+  const div_code = req.params.div_code;
+
+  ProposalModule.getThanaList(div_code, (err, thana_list) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get thana list data" });
+    }
+
+    if (!thana_list || thana_list.length === 0) {
+      return res.status(404).json({ error: "Thana not found" });
+    }
+
+    // Assuming each inner array represents a module
+    const formattedModuleList = thana_list.map((thanaArray) => {
+      return {
+        thana_name: thanaArray[0],
+        thana_code: thanaArray[1],
+      };
+    });
+
+    res.json(formattedModuleList);
+  });
+};
+
+exports.getPostofficeListt = (req, res) => {
+  const thana_code = req.params.thana_code;
+  console.log(thana_code);
+
+  ProposalModule.getPostOfficeList(thana_code, (err, office_list) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get thana list data" });
+    }
+
+    if (!office_list || office_list.length === 0) {
+      return res.status(404).json({ error: "Thana not found" });
+    }
+
+    // Assuming each inner array represents a module
+    const formattedModuleList = office_list.map((thanaArray) => {
+      return {
+        thana_name: thanaArray[0],
+        thana_code: thanaArray[1],
       };
     });
 
