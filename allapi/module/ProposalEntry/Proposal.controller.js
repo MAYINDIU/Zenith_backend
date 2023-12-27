@@ -1,5 +1,86 @@
 const ProposalModule = require("./Proposal.model");
 
+//all education list
+exports.educationList = (req, res) => {
+  ProposalModule.getEducation((err, education) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get education list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = education.map((head) => ({
+      education_name: head[0],
+      education_id: head[1],
+    }));
+
+    res.json(formattedDeptHead);
+  });
+};
+//all occupation list
+exports.getOccupationList = (req, res) => {
+  ProposalModule.getOccupname((err, occupation) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get occupation list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = occupation.map((head) => ({
+      occupation_name: head[0],
+    }));
+
+    res.json(formattedDeptHead);
+  });
+};
+
+//all COUNTRY list
+exports.getCountryList = (req, res) => {
+  ProposalModule.getAllCountry((err, country) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get country list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = country.map((head) => ({
+      country_name: head[0],
+      country_id: head[1],
+    }));
+
+    res.json(formattedDeptHead);
+  });
+};
+
+//all Gender list
+exports.getLocallity = (req, res) => {
+  ProposalModule.getAlllocallity((err, locallity) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get locallity list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = locallity.map((head) => ({
+      locallity_name: head[0],
+      locallity_id: head[1],
+    }));
+
+    res.json(formattedDeptHead);
+  });
+};
+//all Gender list
+exports.getAllgenderList = (req, res) => {
+  ProposalModule.getAllGender((err, gender) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get gender list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = gender.map((head) => ({
+      gender_name: head[0],
+      gender_id: head[1],
+    }));
+
+    res.json(formattedDeptHead);
+  });
+};
 //all branch list
 exports.getAllbranch = (req, res) => {
   ProposalModule.getAllBranch((err, branch) => {
@@ -160,7 +241,8 @@ exports.getAllDivision = (req, res) => {
   });
 };
 
-exports.getAgentList = (req, res) => {
+//Thana list
+exports.getThanaList = (req, res) => {
   const div_code = req.params.div_code;
 
   ProposalModule.getThanaList(div_code, (err, thana_list) => {
@@ -184,24 +266,25 @@ exports.getAgentList = (req, res) => {
   });
 };
 
-exports.getPostofficeListt = (req, res) => {
-  const thana_code = req.params.thana_code;
-  console.log(thana_code);
+exports.getPostofficeList = (req, res) => {
+  const code = req.params.code;
 
-  ProposalModule.getPostOfficeList(thana_code, (err, office_list) => {
+  ProposalModule.getPostList(code, (err, thana_list) => {
     if (err) {
-      return res.status(500).json({ error: "Failed to get thana list data" });
+      return res
+        .status(500)
+        .json({ error: "Failed to get post office list data" });
     }
 
-    if (!office_list || office_list.length === 0) {
-      return res.status(404).json({ error: "Thana not found" });
+    if (!thana_list || thana_list.length === 0) {
+      return res.status(404).json({ error: "post office not found" });
     }
 
     // Assuming each inner array represents a module
-    const formattedModuleList = office_list.map((thanaArray) => {
+    const formattedModuleList = thana_list.map((thanaArray) => {
       return {
-        thana_name: thanaArray[0],
-        thana_code: thanaArray[1],
+        postoffice_name: thanaArray[0],
+        postoffice_code: thanaArray[1],
       };
     });
 

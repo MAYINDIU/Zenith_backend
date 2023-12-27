@@ -3,6 +3,67 @@ const oracledb = require("oracledb");
 oracledb.initOracleClient({ libDir: "C:\\instantclient_21_3" });
 
 const proposal = {
+  //AL COUNTRY LIST
+  getEducation: (callback) => {
+    async function education() {
+      let con;
+      try {
+        con = await oracledb.getConnection({
+          user: "MENU",
+          password: "mayin",
+          connectString: "192.168.3.11/system",
+        });
+        const data = await con.execute(
+          "SELECT EDNAME,EDCODE FROM POLICY_MANAGEMENT.ONLINE_EDUCATION"
+        );
+        callback(null, data.rows);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    education();
+  },
+
+  //AL COUNTRY LIST
+  getOccupname: (callback) => {
+    async function occupation() {
+      let con;
+      try {
+        con = await oracledb.getConnection({
+          user: "MENU",
+          password: "mayin",
+          connectString: "192.168.3.11/system",
+        });
+        const data = await con.execute(
+          "SELECT OCCUPNAME FROM POLICY_MANAGEMENT.ONLINE_OCCUPATION"
+        );
+        callback(null, data.rows);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    occupation();
+  },
+  //AL COUNTRY LIST
+  getAllCountry: (callback) => {
+    async function COUNTRY() {
+      let con;
+      try {
+        con = await oracledb.getConnection({
+          user: "MENU",
+          password: "mayin",
+          connectString: "192.168.3.11/system",
+        });
+        const data = await con.execute(
+          "SELECT DISTINCT  C_NAME,C_CODE FROM POLICY_MANAGEMENT.COUNTRY"
+        );
+        callback(null, data.rows);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    COUNTRY();
+  },
   //AL BRANCH LIST
   getAllBranch: (callback) => {
     async function allbranch() {
@@ -23,6 +84,49 @@ const proposal = {
     }
     allbranch();
   },
+
+  //GENDER LIST
+  getAllGender: (callback) => {
+    async function allgender() {
+      let con;
+      try {
+        con = await oracledb.getConnection({
+          user: "MENU",
+          password: "mayin",
+          connectString: "192.168.3.11/system",
+        });
+        const data = await con.execute(
+          "SELECT GENDER_NAME,GENDER_ID FROM POLICY_MANAGEMENT.ONLINE_GENDER"
+        );
+        callback(null, data.rows);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    allgender();
+  },
+
+  //LOCALITY LIST
+  getAlllocallity: (callback) => {
+    async function allLocallity() {
+      let con;
+      try {
+        con = await oracledb.getConnection({
+          user: "MENU",
+          password: "mayin",
+          connectString: "192.168.3.11/system",
+        });
+        const data = await con.execute(
+          "SELECT LOCALITY_TYPE,LOCALITY_ID FROM POLICY_MANAGEMENT.ONLINE_LOCALITY"
+        );
+        callback(null, data.rows);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    allLocallity();
+  },
+
   //ALL PROJECT LIST
   getAllproject: (callback) => {
     async function allprojects() {
@@ -194,7 +298,7 @@ const proposal = {
   },
 
   //POST OFFICE LIST
-  getPostOfficeList: async (thana_code, callback) => {
+  getPostList: async (code, callback) => {
     let con;
     try {
       con = await oracledb.getConnection({
@@ -204,8 +308,8 @@ const proposal = {
       });
 
       const result = await con.execute(
-        "SELECT POST_OFFICE_NM,POST_CODE FROM POLICY_MANAGEMENT.POST_OFFICE WHERE THANA_CODE=:thana_code'",
-        { thana_code: thana_code }
+        "SELECT POST_OFFICE_NM,POST_CODE FROM POLICY_MANAGEMENT.POST_OFFICE WHERE THANA_CODE=:code",
+        { code: code }
       );
 
       // Assuming you want to return the first row
