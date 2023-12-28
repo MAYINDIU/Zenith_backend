@@ -16,6 +16,7 @@ router
   .get("/agent-list/:base_project", ProposalController.getAgentList)
   .get("/all-district", ProposalController.getAllDivision)
   .get("/thana-list/:div_code", ProposalController.getThanaList)
-  .get("/post-office/:code", ProposalController.getPostofficeList);
+  .get("/post-office/:code", ProposalController.getPostofficeList)
+  .post("/proposal-entry", ProposalController.InsertProposalDataController);
 
 module.exports = router;

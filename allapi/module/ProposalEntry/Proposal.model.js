@@ -3,6 +3,106 @@ const oracledb = require("oracledb");
 oracledb.initOracleClient({ libDir: "C:\\instantclient_21_3" });
 
 const proposal = {
+  //PROPOSAL
+  InsertProposalData: async (proposals) => {
+    let con;
+
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system",
+      });
+
+      const results = [];
+
+      for (const proposal of proposals) {
+        const {
+          PROPOSAL_N,
+          PROPOSAL_D,
+          RISKDATE,
+          PROPOSER,
+          FATHERS_NAME,
+          FATHERHUSB,
+          MOTHERS_NAME,
+          ADDRESS1,
+          POST_CODE_CUR,
+          POST_CODE_PER,
+          CITY,
+          MOBILE,
+          LOCALITY,
+          N_ID_NUMBER,
+          DOB,
+          AGE,
+          SEX,
+          OCCUPATION,
+          AGENT_ID,
+          BRANCH_ID,
+          USERID,
+          LAST_EDUCATION,
+          RELIGION,
+          MARITAL_STATUS,
+          LOCALITY_COUNTRY,
+          SPOUSE,
+          PD_CODE,
+        } = proposal;
+
+        const result = await con.execute(
+          `INSERT INTO POLICY_MANAGEMENT.PROPOSAL_DUMMY(PROPOSAL_N, PROPOSAL_D, RISKDATE, PROPOSER, FATHERS_NAME, FATHERHUSB, MOTHERS_NAME,ADDRESS1,POST_CODE_CUR, POST_CODE_PER, CITY, MOBILE, LOCALITY,  N_ID_NUMBER,DOB, AGE, SEX, OCCUPATION, AGENT_ID, BRANCH_ID, USERID,LAST_EDUCATION, RELIGION, MARITAL_STATUS, LOCALITY_COUNTRY, SPOUSE, PD_CODE)
+            
+            VALUES(:PROPOSAL_N, TO_DATE(:PROPOSAL_D,'YYYYMMDD'), TO_DATE(:RISKDATE,'YYYYMMDD'), :PROPOSER,:FATHERS_NAME,:FATHERHUSB,:MOTHERS_NAME,:ADDRESS1,:POST_CODE_CUR,:POST_CODE_PER,:CITY,
+            :MOBILE,:LOCALITY,:N_ID_NUMBER,TO_DATE(:DOB,'YYYYMMDD'),:AGE,:SEX,:OCCUPATION,:AGENT_ID,:BRANCH_ID,:USERID,:LAST_EDUCATION,:RELIGION,:MARITAL_STATUS,
+            :LOCALITY_COUNTRY,:SPOUSE,:PD_CODE)`,
+          {
+            PROPOSAL_N,
+            PROPOSAL_D,
+            RISKDATE,
+            PROPOSER,
+            FATHERS_NAME,
+            FATHERHUSB,
+            MOTHERS_NAME,
+            ADDRESS1,
+            POST_CODE_CUR,
+            POST_CODE_PER,
+            CITY,
+            MOBILE,
+            LOCALITY,
+            N_ID_NUMBER,
+            DOB,
+            AGE,
+            SEX,
+            OCCUPATION,
+            AGENT_ID,
+            BRANCH_ID,
+            USERID,
+            LAST_EDUCATION,
+            RELIGION,
+            MARITAL_STATUS,
+            LOCALITY_COUNTRY,
+            SPOUSE,
+            PD_CODE,
+          },
+          { autoCommit: true }
+        );
+
+        results.push(result.outBinds);
+      }
+
+      return results;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
+
   //AL COUNTRY LIST
   getEducation: (callback) => {
     async function education() {

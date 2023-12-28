@@ -1,5 +1,18 @@
 const ProposalModule = require("./Proposal.model");
 
+exports.InsertProposalDataController = async (req, res) => {
+  try {
+    const proposals = req.body;
+    const results = await ProposalModule.InsertProposalData(
+      Array.isArray(proposals) ? proposals : [proposals]
+    );
+    res.status(201).json("Proposal Entry Successfully");
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+};
+
 //all education list
 exports.educationList = (req, res) => {
   ProposalModule.getEducation((err, education) => {
