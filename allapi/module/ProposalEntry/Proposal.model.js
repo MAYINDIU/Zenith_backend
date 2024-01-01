@@ -103,6 +103,38 @@ const proposal = {
     }
   },
 
+  //FIND PROPOSAL NUMBER
+  getProposalnNumber: async (OFFICE_CODE, callback) => {
+    let con;
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system",
+      });
+
+      const result = await con.execute(
+        "SELECT POLICY_MANAGEMENT.M_PROPOSAL_NO(:OFFICE_CODE) FROM SYS.DUAL",
+        { OFFICE_CODE: OFFICE_CODE }
+      );
+
+      // Assuming you want to return the first row
+      const data = result;
+      callback(null, data.rows);
+    } catch (err) {
+      console.error(err);
+      callback(err, null);
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
+
   //AL COUNTRY LIST
   getEducation: (callback) => {
     async function education() {
@@ -410,6 +442,41 @@ const proposal = {
       const result = await con.execute(
         "SELECT POST_OFFICE_NM,POST_CODE FROM POLICY_MANAGEMENT.POST_OFFICE WHERE THANA_CODE=:code",
         { code: code }
+      );
+
+      // Assuming you want to return the first row
+      const data = result;
+      callback(null, data.rows);
+    } catch (err) {
+      console.error(err);
+      callback(err, null);
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
+
+  //commencement data info
+  getCommencementDate: async (com_date, policy_type, callback) => {
+    let con;
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system",
+      });
+
+      const result = await con.execute(
+        "SELECT POLICY_MANAGEMENT.API_COMM_DATE (TO_DATE(:com_date, 'YYYYMMDD'),:policy_type) FROM SYS.DUAL",
+        {
+          com_date: com_date,
+          policy_type: policy_type,
+        }
       );
 
       // Assuming you want to return the first row

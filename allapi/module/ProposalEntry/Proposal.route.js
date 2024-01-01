@@ -17,6 +17,11 @@ router
   .get("/all-district", ProposalController.getAllDivision)
   .get("/thana-list/:div_code", ProposalController.getThanaList)
   .get("/post-office/:code", ProposalController.getPostofficeList)
-  .post("/proposal-entry", ProposalController.InsertProposalDataController);
+  .post("/proposal-entry", ProposalController.InsertProposalDataController)
+  .get("/proposal-number", ProposalController.getProposalNumber)
+  .get(
+    "/comm_date/:com_date/:policy_type",
+    ProposalController.getCommencementDate
+  );
 
 module.exports = router;

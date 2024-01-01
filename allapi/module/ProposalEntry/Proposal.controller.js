@@ -158,7 +158,7 @@ exports.getchainList = (req, res) => {
   );
 };
 
-//Proposal infrontation
+//Proposal information
 exports.getProposalInformation = (req, res) => {
   const { proposal_no } = req.query;
 
@@ -209,6 +209,25 @@ exports.getProposalInformation = (req, res) => {
     });
 
     res.json(formattedModuleList);
+  });
+};
+//Get Proposal number
+exports.getProposalNumber = (req, res) => {
+  const { OFFICE_CODE } = req.query;
+
+  ProposalModule.getProposalnNumber(OFFICE_CODE, (err, PN) => {
+    if (err) {
+      return res.status(500).json({ error: "Proposal number not found" });
+    }
+    if (!PN) {
+      return res.status(404).json({ error: "Proposal number not found" });
+    }
+
+    const ProposalNumber = {
+      proposal_no: PN[0],
+    };
+
+    res.json(ProposalNumber);
   });
 };
 
@@ -303,4 +322,32 @@ exports.getPostofficeList = (req, res) => {
 
     res.json(formattedModuleList);
   });
+};
+
+//get commencemnet Date
+exports.getCommencementDate = (req, res) => {
+  const com_date = req.params.com_date;
+  const policy_type = req.params.policy_type;
+
+  ProposalModule.getCommencementDate(
+    com_date,
+    policy_type,
+    (err, comm_date) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ error: "Failed to get commencement date" });
+      }
+
+      if (!comm_date || comm_date.length === 0) {
+        return res.status(404).json({ error: "commencement date not found" });
+      }
+
+      const commencement_date = {
+        comm_date: comm_date[0],
+      };
+
+      res.json(commencement_date);
+    }
+  );
 };
