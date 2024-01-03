@@ -22,6 +22,7 @@ router
   .get(
     "/comm_date/:com_date/:policy_type",
     ProposalController.getCommencementDate
-  );
-
+  )
+  .get("/all-plan", ProposalController.getAllPlanList)
+  .get("/mode-list/:plan_id", ProposalController.getPayModeList);
 module.exports = router;

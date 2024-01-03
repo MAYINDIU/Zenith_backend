@@ -351,3 +351,47 @@ exports.getCommencementDate = (req, res) => {
     }
   );
 };
+
+//DIVISION LIST
+exports.getAllPlanList = (req, res) => {
+  ProposalModule.getAllPlan((err, division) => {
+    if (err) {
+      return res.status(500).json({ error: "Failed to get plan list" });
+    }
+
+    // Map the dept_head data to the desired format
+    const formattedDeptHead = division.map((head) => ({
+      plan_id: head[0],
+      plan_name: head[1],
+    }));
+
+    res.json(formattedDeptHead);
+  });
+};
+
+//PAYMENT MODE LIST
+exports.getPayModeList = (req, res) => {
+  const plan_id = req.params.plan_id;
+
+  ProposalModule.getPaymodeList(plan_id, (err, mode_list) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ error: "Failed to get mode list list data" });
+    }
+
+    if (!mode_list || mode_list.length === 0) {
+      return res.status(404).json({ error: "post mode list not found" });
+    }
+
+    // Assuming each inner array represents a module
+    const formattedModuleList = mode_list.map((modeArray) => {
+      return {
+        mode_code: modeArray[0],
+        mode_name: modeArray[1],
+      };
+    });
+
+    res.json(formattedModuleList);
+  });
+};

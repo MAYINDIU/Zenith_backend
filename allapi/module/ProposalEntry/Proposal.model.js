@@ -495,5 +495,57 @@ const proposal = {
       }
     }
   },
+
+  //ALL PLAN LIST
+  getAllPlan: (callback) => {
+    async function allplan() {
+      let con;
+      try {
+        con = await oracledb.getConnection({
+          user: "MENU",
+          password: "mayin",
+          connectString: "192.168.3.11/system",
+        });
+        const data = await con.execute(
+          "SELECT PLAN_ID,PLAN_DESCRIPTION FROM POLICY_MANAGEMENT.PLANS WHERE IDRA_SENT='Y'"
+        );
+        callback(null, data.rows);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    allplan();
+  },
+  //PAYMNENT MODE LIST
+  getPaymodeList: async (plan_id, callback) => {
+    let con;
+    try {
+      con = await oracledb.getConnection({
+        user: "MENU",
+        password: "mayin",
+        connectString: "192.168.3.11/system",
+      });
+
+      const result = await con.execute(
+        "SELECT MODE_CODE, MODE_NAME FROM POLICY_MANAGEMENT.PAYMENT_MODE_PLANWISE A, POLICY_MANAGEMENT.PAY_MODE B WHERE A.MODE_CODE=B.MODE_ID AND A.TABLE_ID=:plan_id",
+        { plan_id: plan_id }
+      );
+
+      // Assuming you want to return the first row
+      const data = result;
+      callback(null, data.rows);
+    } catch (err) {
+      console.error(err);
+      callback(err, null);
+    } finally {
+      if (con) {
+        try {
+          await con.close();
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    }
+  },
 };
 module.exports = proposal;
